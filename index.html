@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0053)https://manuelvs8.github.io/Origen-de-los-materiales/ -->
-<html lang="es" translate="no"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<html lang="es" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <meta name="google" content="notranslate">
-    <title>Origen de los materiales</title>
+    <title>Formas de energía</title>
     <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/icono.ico">
     <style>
         /* ====== Reset & base ====== */
@@ -22,6 +22,8 @@
             --green:#2ecc71;
             --red:#e74c3c;
             --panel:#E8EAFF;
+            --card-base:#3498db;
+            --card-selected:#f1c40f;
         }
         body{
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -64,135 +66,80 @@
         .timer{ font-weight:900; color:var(--blue-700); font-size:clamp(.95rem,2.3vw,1.15rem); }
         .progress-bar{ flex:1; height:10px; background:#e6f2ff; border-radius:999px; overflow:hidden; }
         .progress-fill{ height:100%; width:0%; background:linear-gradient(90deg, var(--orange) 0%, var(--orange-700) 100%); transition:width .3s ease; }
+        .level-indicator{ font-weight:700; color: var(--blue-700); font-size: 0.9rem; background: #e6f2ff; padding: 4px 10px; border-radius: 20px; }
 
         /* Pantalla Inicio */
         .start-content{ display:flex; flex-direction:column; justify-content:center; align-items:center; flex:1; gap:1rem; padding:1rem; }
         .advice-box{ background:var(--panel); border-left:4px solid var(--blue-700); padding:1rem 1.2rem; border-radius:12px;
             color:var(--blue-700); max-width:760px; text-align:center; font-size:clamp(1rem,3vw,1.15rem); }
-        .start-image{ max-width: 300px; width: 100%; margin: 0 auto; margin-top: auto; }
+        .start-image{ max-width: 300px; width: 100%; margin: 0 auto; }
         
-        /* Botón Mute con SVG */
-        .mute-btn{ position:absolute; top:.8rem; right:1rem; background:linear-gradient(135deg, var(--orange), var(--orange-700)); color:#fff; border:2px solid #fff; width:42px; height:42px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; z-index:20; padding: 0; transition: transform 0.1s; }
-        .mute-btn:hover{ transform: scale(1.1); }
-        .mute-btn svg { width: 20px; height: 20px; fill: white; }
+        .mute-btn{ position:absolute; top:.8rem; right:1rem; background:linear-gradient(135deg, var(--orange), var(--orange-700)); color:#fff; border:2px solid #fff; width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; z-index:20; transition: transform .2s, box-shadow .2s; }
+        .mute-btn:hover{ transform:scale(1.1); box-shadow:0 4px 12px rgba(245,158,66,.4); }
+        .mute-btn svg{ width:20px; height:20px; pointer-events:none; }
 
-        /* --- Pantalla Resumen --- */
+        /* Pantalla Resumen */
         .theory-content { 
             padding: 10px; 
-            margin: 10px 0; 
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            margin: 10px 0;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
-        .theory-main-title {
-            text-align: center;
-            color: var(--blue-dark);
-            font-size: 1.4rem;
-            font-weight: 800;
-            margin-bottom: 5px;
-        }
-        .theory-intro {
-            text-align: center;
-            color: #555;
-            margin-bottom: 10px;
-            font-size: 1rem;
-        }
-        .change-block {
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            flex: 1;
-        }
-        .change-block.natural {
-            background: #e6f2ff;
-            border: 2px solid var(--blue-600);
-        }
-        .change-block.artificial {
-            background: #fff3e0;
-            border: 2px solid var(--orange);
-        }
-        .block-title {
-            font-size: 1.3rem;
-            font-weight: 800;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .natural .block-title { color: var(--blue-700); }
-        .artificial .block-title { color: var(--orange-700); }
-        
-        .block-desc {
-            font-size: 0.95rem;
-            margin-bottom: 10px;
+        .theory-box {
+            background: var(--panel);
+            border-radius: 12px;
+            padding: 1.2rem 1.4rem;
+            line-height: 1.7;
             color: #444;
+            font-size: clamp(0.85rem, 2.5vw, 1.05rem);
         }
-        .sub-block {
-            margin-left: 15px;
-            margin-bottom: 8px;
+        .theory-box h2 {
+            color: var(--blue-dark);
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            margin-bottom: 0.6rem;
+            font-weight: 900;
         }
-        .sub-block-title {
-            font-weight: 700;
+        .theory-box p {
+            margin-bottom: 0.8rem;
+        }
+        .theory-box ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1rem;
+        }
+        .theory-box li {
+            padding: 0.35rem 0 0.35rem 1.4rem;
+            position: relative;
+        }
+        .theory-box li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--orange);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .theory-box li strong {
             color: var(--blue-dark);
         }
-        .natural .sub-block-title { color: var(--blue-600); }
-        .artificial .sub-block-title { color: var(--orange-700); }
-        .example-text {
-            color: #555;
-            font-size: 0.9rem;
+        .theory-box .arrow-hl {
+            color: var(--orange);
+            font-weight: 700;
         }
-        .play-btn-container {
-            text-align: center;
-            margin-top: auto;
-            padding-top: 10px;
+        .theory-box .final-theory {
+            background: rgba(37, 79, 186, 0.08);
+            border-left: 3px solid var(--blue-600);
+            padding: 0.7rem 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 0.5rem;
         }
-
-        /* Juego 1: Tarjetas */
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-            justify-content: center;
-        }
-        @media (max-width: 600px) { 
-            .cards-container { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .memory-card { font-size: 0.8rem; padding: 10px; }
+        .theory-box .final-theory strong {
+            color: var(--orange);
         }
 
-        .memory-card {
-            background-color: #3498db; 
-            color: white;
-            border: 3px solid transparent;
-            border-radius: 10px;
-            padding: 15px;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-            text-align: center;
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            font-weight: bold;
-            user-select: none;
-        }
-        .memory-card:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        .memory-card.selected { background-color: #f1c40f; transform: scale(1.05); color: white; }
-        .memory-card.matched { background-color: #27ae60; color: white; cursor: default; }
-        .memory-card.flash-error { animation: shakeRed 0.3s ease-in-out; }
-        @keyframes shakeRed {
-            0% { background-color: #3498db; transform: translateX(0); }
-            20% { background-color: #e74c3c; transform: translateX(-5px); }
-            40% { transform: translateX(5px); }
-            60% { transform: translateX(-5px); }
-            80% { transform: translateX(5px); }
-            100% { background-color: #3498db; transform: translateX(0); }
-        }
-
-        /* Juego 2: Identificar */
-        .game2-container {
+        /* Juegos genéricos */
+        .game-container-generic {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -202,83 +149,36 @@
             margin: 0 auto;
             flex: 1;
         }
-        
-        .image-display {
+        .image-display, .text-display {
             width: 100%;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             background: transparent; 
-            min-height: 300px;
-            gap: 15px;
+        }
+        .image-display {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 10px;
         }
         .image-display img {
-            max-width: 100%;
-            height: auto;
-            max-height: 280px;
-            object-fit: contain;
+            width: 100%; 
+            height: auto; 
+            max-height: 340px;
+            object-fit: contain; 
             border-radius: 8px;
-            transition: transform 0.2s ease;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
         }
         .image-display img:hover { transform: scale(1.03); }
 
-        /* Word display area */
-        .word-display-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .material-word {
-            font-size: clamp(2rem, 6vw, 3rem);
-            font-weight: 800;
-            color: var(--blue-dark);
-            letter-spacing: 1px;
-        }
-        .play-word-btn {
-            background: linear-gradient(135deg, var(--blue-600), var(--blue-700));
-            border: none;
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        .play-word-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-        }
-        .play-word-btn svg {
-            fill: white;
-            width: 24px;
-            height: 24px;
-        }
-
-        /* Contenedor selects en línea */
-        .selectors-container {
-            display: flex;
-            flex-direction: row;
-            gap: 1rem;
-            width: 100%;
-            max-width: 500px;
-            justify-content: center;
-            align-items: flex-end;
-            flex-wrap: nowrap;
-        }
-
-        /* Lista desplegable hacia arriba */
+        /* Lista desplegable */
         .custom-select-wrapper {
             position: relative;
             user-select: none;
             width: 100%;
-            flex: 1;
+            max-width: 400px;
             z-index: 50;
-            min-width: 0;
         }
         .custom-select {
             position: relative;
@@ -300,19 +200,9 @@
             border: 2px solid var(--blue-600);
             border-radius: 10px;
             cursor: pointer;
-            transition: border-color 0.2s, color 0.2s;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            transition: border-color 0.2s;
         }
-        .custom-select__trigger:hover {
-            border-color: var(--orange);
-        }
-        .custom-select__trigger.selected-highlight {
-            color: var(--orange);
-            border-color: var(--orange);
-            font-weight: 700;
-        }
+        .custom-select__trigger:hover { border-color: var(--orange); }
         .custom-select__trigger::after {
             content: '';
             width: 10px; height: 10px;
@@ -321,13 +211,15 @@
             transform: rotate(45deg);
             margin-top: -5px;
             transition: transform 0.2s;
-            flex-shrink: 0;
         }
-        
-        /* Drop UP */
+        .custom-select.open .custom-select__trigger::after {
+            transform: rotate(-135deg);
+            margin-top: 5px;
+        }
         .custom-options {
             position: absolute;
             display: block;
+            top: auto; 
             bottom: 100%; 
             left: 0;
             right: 0;
@@ -340,23 +232,17 @@
             visibility: hidden;
             pointer-events: none;
             z-index: 100;
-            height: auto; 
-            overflow: visible; 
+            max-height: 250px;
+            overflow-y: auto;
             transform: translateY(10px);
             transition: all 0.3s;
         }
-        
         .custom-select.open .custom-options {
             opacity: 1;
             visibility: visible;
             pointer-events: all;
             transform: translateY(0);
         }
-        
-        .custom-select.open .custom-select__trigger::after {
-             margin-top: 5px; transform: rotate(-135deg);
-        }
-        
         .custom-option {
             position: relative;
             display: block;
@@ -364,20 +250,13 @@
             font-size: 1rem;
             font-weight: 400;
             color: var(--blue-700);
-            line-height: 45px;
+            line-height: 42px;
             cursor: pointer;
             transition: all 0.2s;
             white-space: nowrap;
         }
-        .custom-option:hover {
-            background-color: #e6f2ff;
-            color: var(--orange);
-        }
-        .custom-option.selected {
-            background-color: var(--panel);
-            color: var(--blue-dark);
-            font-weight: 700;
-        }
+        .custom-option:hover { background-color: #e6f2ff; color: var(--orange); }
+        .custom-option.selected { background-color: var(--panel); color: var(--blue-dark); font-weight: 700; }
         
         .custom-select__trigger.correct {
             border-color: var(--green);
@@ -388,13 +267,7 @@
             border-color: var(--red);
             background-color: rgba(231, 76, 60, 0.1);
             color: var(--red);
-            animation: shake 0.3s;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+            animation: shake 0.3s ease-in-out;
         }
 
         .action-area {
@@ -402,7 +275,207 @@
             display: flex; 
             align-items: center;
             justify-content: center;
+        }
+
+        /* ====== JUEGO 1: EMPAREJAR — RESPONSIVE ANCHO ====== */
+        .match-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
             width: 100%;
+            padding: 0.3rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .match-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .match-card {
+            background-color: var(--card-base);
+            color: white;
+            border: 4px solid transparent;
+            border-radius: 10px;
+            padding: 6px 8px;
+            min-height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: clamp(0.7rem, 1.9vw, 0.9rem);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            position: relative;
+        }
+        .match-card.def-card {
+            font-size: clamp(0.6rem, 1.7vw, 0.8rem);
+            font-weight: 600;
+            line-height: 1.25;
+        }
+        .match-card:hover:not(.matched) {
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .match-card.selected {
+            background-color: var(--card-selected);
+            border-color: transparent;
+            color: white;
+            animation: pulse 1s infinite;
+        }
+        .match-card.matched {
+            background-color: var(--green);
+            border-color: transparent;
+            color: white;
+            transform: scale(1);
+            cursor: default;
+            opacity: 1;
+            box-shadow: 0 3px 10px rgba(46, 204, 113, 0.35);
+        }
+        .match-card.flash-error {
+            animation: shake 0.3s ease-in-out;
+            border-color: var(--red);
+            background-color: var(--red);
+        }
+
+        /* Tablets */
+        @media (min-width: 520px) {
+            .match-container {
+                gap: 16px;
+                padding: 0.6rem;
+            }
+            .match-column {
+                gap: 10px;
+            }
+            .match-card {
+                min-height: 70px;
+                font-size: clamp(0.8rem, 2.2vw, 1rem);
+                padding: 10px 14px;
+                border-radius: 12px;
+                border-width: 4px;
+            }
+            .match-card.def-card {
+                font-size: clamp(0.7rem, 2vw, 0.9rem);
+                line-height: 1.3;
+            }
+        }
+
+        /* Pantallas grandes (aulas digitales, proyectores) */
+        @media (min-width: 800px) {
+            .match-container {
+                gap: 28px;
+                padding: 1.2rem;
+            }
+            .match-column {
+                gap: 14px;
+            }
+            .match-card {
+                min-height: 100px;
+                font-size: clamp(1rem, 2.5vw, 1.25rem);
+                padding: 14px 20px;
+                border-radius: 14px;
+                border-width: 5px;
+            }
+            .match-card.def-card {
+                font-size: clamp(0.85rem, 2.2vw, 1.05rem);
+                line-height: 1.35;
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.7); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(241, 196, 15, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); }
+        }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-5px); }
+            40% { transform: translateX(5px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Juego 3: Grid */
+        .game3-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            max-width: 540px;
+            margin: 0 auto;
+            flex: 1;
+        }
+        .game3-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+        .game3-text {
+            font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+            color: var(--blue-dark);
+            font-weight: 700;
+            text-align: center;
+        }
+        .game3-play-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--orange), var(--orange-700));
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            flex-shrink: 0;
+        }
+        .game3-play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(245,158,66,.4);
+        }
+        .game3-play-btn:active { transform: scale(0.95); }
+        .game3-play-btn svg { width: 18px; height: 18px; fill: white; pointer-events: none; margin-left: 2px; }
+
+        .game3-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            width: 100%;
+        }
+        .game3-cell {
+            aspect-ratio: 4 / 3;
+            border: 3px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: border-color 0.15s, background-color 0.15s, box-shadow 0.2s;
+            background: transparent;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .game3-cell:hover {
+            border-color: var(--blue-600);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .game3-cell img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+        .game3-cell.flash-correct {
+            border-color: var(--green);
+            background: rgba(46, 204, 113, 0.15);
+        }
+        .game3-cell.flash-error {
+            border-color: var(--red);
+            background: rgba(231, 76, 60, 0.15);
+            animation: shake 0.3s ease-in-out;
         }
 
         /* Pantalla Final */
@@ -438,42 +511,33 @@
         
         .confetti{ position:fixed; width:10px; height:10px; border-radius:50%; animation: confetti-fall 3s linear forwards; z-index:999; }
         @keyframes confetti-fall{ 0%{ transform:translate(0, -20px) rotate(0); opacity:1;} 100%{ transform:translate(var(--tx), var(--ty)) rotate(360deg); opacity:0; } }
-
-        /* English section styling */
-        .english-section {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .english-section .highlight-en {
-            color: var(--orange);
-            font-weight: 800;
-        }
     </style>
 </head>
 <body>
 <div class="game-container">
     <button class="mute-btn" id="muteBtn" title="Silenciar/Activar sonido">
-        <svg id="iconSpeaker" viewBox="0 0 24 24">
-            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path>
-        </svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
     </button>
 
     <!-- Pantalla de Inicio -->
     <section class="screen active" id="startScreen">
         <header>
-            <h1>Origen de los materiales</h1>
-            <div class="subtitle">Llamamos materiales a los distintos tipos de materia. Estúdialos</div>
+            <h1>Formas de energía</h1>
+            <div class="subtitle">Conoce las distintas formas en las que se manifiesta la energía.</div>
         </header>
 
         <div class="start-content">
             <div class="advice-box">
-                <span class="advice-text">Los materiales pueden ser de <span class="highlight-keyword">origen natural</span> si lo encontramos en la naturaleza (origen <span class="highlight-keyword">animal</span>, <span class="highlight-keyword">vegetal</span> o <span class="highlight-keyword">mineral</span>) o de <span class="highlight-keyword">origen artificial</span> si lo fabrican las personas a partir de materiales naturales. Aprenderemos a diferenciarlos.</span>
-                <strong style="display:block; margin-top:0.5rem; text-align: center;">¡Ánimo!</strong>
+                <span class="advice-text">La energía es todo aquello capaz de producir cambios en la materia. Nada ocurre sin energía. Las formas de energía que estudiaremos son: <span class="highlight-keyword">mecánica, térmica, eléctrica, luminosa, química, nuclear</span>.
+                    <strong style="display:block; margin-top:0.5rem; text-align: center;">¡Ánimo!</strong>
+                </span>
             </div>
             
             <button class="btn btn-primary" id="startBtn">Comenzar</button>
             
-            <img class="start-image" src="./Origen de los materiales_files/Niños.png" alt="Kids learning">
+            <img class="start-image" src="https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Ni%C3%B1os.png" alt="Kids learning">
             
+            <!-- Hall of Fame -->
             <div class="hall-of-fame" id="hallOfFame">
               <div class="hall-of-fame-title">🏆 Mejores puntuaciones 🏆</div>
               <table class="hall-of-fame-table">
@@ -485,12 +549,7 @@
                             <th>Tiempo</th>
                         </tr>
                     </thead>
-                    <tbody id="hofTableBody"><tr>
-                                <td>1º</td>
-                                <td>greta la  pro</td>
-                                <td>100</td>
-                                <td>14:26.7</td>
-                            </tr></tbody>
+                    <tbody id="hofTableBody"></tbody>
               </table>
             </div>
         </div>
@@ -499,130 +558,103 @@
     <!-- Pantalla Resumen -->
     <section class="screen" id="summaryScreen">
         <header>
-            <h1>La materia y sus propiedades generales</h1>
+            <h1>Diferentes formas de energía</h1>
         </header>
         <div class="theory-content">
-            <div class="theory-main-title">Origen de los materiales</div>
-            <p class="theory-intro">Llamamos materiales a los distintos tipos de materia. Estos materiales pueden ser de <strong>origen natural</strong> o <strong>artificial</strong>:</p>
-            
-            <div class="change-block natural">
-                <div class="block-title">
-                    Origen natural
-                </div>
-                <div class="block-desc">
-                    Los encontramos directamente en la naturaleza. Pueden ser:
-                </div>
-                <div class="sub-block">
-                    <div class="sub-block-title">Origen vegetal:</div>
-                    <div class="example-text">madera, algodón, corcho...</div>
-                </div>
-                <div class="sub-block">
-                    <div class="sub-block-title">Origen animal:</div>
-                    <div class="example-text">lana, cuero, seda...</div>
-                </div>
-                <div class="sub-block">
-                    <div class="sub-block-title">Origen mineral:</div>
-                    <div class="example-text">hierro, granito, oro...</div>
+            <div class="theory-box">
+                <h2>Formas de energía:</h2>
+                <p>La energía es la capacidad de producir cambios en la materia. La energía se puede presentar de diferentes formas:</p>
+                <ul>
+                    <li><strong>Energía mecánica:</strong> la tienen los cuerpos en movimiento <span class="arrow-hl">→ patinete</span></li>
+                    <li><strong>Energía térmica:</strong> transmite calor <span class="arrow-hl">→ fuego</span></li>
+                    <li><strong>Energía luminosa:</strong> emite luz <span class="arrow-hl">→ bombilla</span></li>
+                    <li><strong>Energía química:</strong> almacenada en alimentos, baterías y combustibles.</li>
+                    <li><strong>Energía eléctrica:</strong> contiene electricidad <span class="arrow-hl">→ rayo</span></li>
+                    <li><strong>Energía nuclear:</strong> se encuentra en el interior de los átomos <span class="arrow-hl">→ central nuclear</span>.</li>
+                </ul>
+                <div class="final-theory">
+                    La energía no se crea ni se destruye, sino que se transforma. Por ejemplo: la energía eléctrica se puede transformar en <strong>mecánica</strong> (ventilador), <strong>térmica</strong> (estufa) o <strong>lumínica</strong> (bombilla).
                 </div>
             </div>
-
-            <div class="change-block artificial">
-                <div class="block-title">
-                    Origen artificial
-                </div>
-                <div class="block-desc">
-                    Son fabricados por el ser humano a partir de materiales naturales. Algunos ejemplos son:
-                </div>
-                <div class="sub-block">
-                    <div class="sub-block-title">Plástico:</div>
-                    <div class="example-text">procedente del petróleo.</div>
-                </div>
-                <div class="sub-block">
-                    <div class="sub-block-title">Vidrio:</div>
-                    <div class="example-text">se obtiene fundiendo arena.</div>
-                </div>
-                <div class="sub-block">
-                    <div class="sub-block-title">Bronce:</div>
-                    <div class="example-text">es una aleación de cobre y estaño.</div>
-                </div>
-                <div class="sub-block">
-                    <div class="sub-block-title">Papel:</div>
-                    <div class="example-text">se obtiene a partir de la madera.</div>
-                </div>
-            </div>
-
-            <div class="play-btn-container">
-                <button class="btn btn-primary" id="playBtn">Jugar</button>
-            </div>
+        </div>
+        <div style="text-align: center; margin-top: 1rem;">
+            <button class="btn btn-primary" id="playBtn">Jugar</button>
         </div>
     </section>
 
-    <!-- Pantalla Juego 1 -->
+    <!-- Pantalla Juego 1: Emparejar con definiciones -->
     <section class="screen" id="game1Screen">
         <header>
-            <h1>Empareja las tarjetas</h1>
-            <div class="subtitle">Nivel 1/2</div>
+            <h1>Formas de energía</h1>
+            <div class="subtitle">Relaciona cada forma de energía con su definición.</div>
         </header>
         <div class="game-info">
             <div class="timer" id="timerGame1">00:00.0</div>
             <div class="progress-bar"><div class="progress-fill" id="progressFillGame1"></div></div>
-            <div class="timer" style="font-size:0.9rem;">Intentos: <span id="attemptsGame1">0</span></div>
+            <div class="level-indicator">Nivel 1/3</div>
         </div>
-        <div class="cards-container" id="cardsContainerGame1"></div>
+        <div class="match-container" id="matchContainer1">
+            <!-- Columnas generadas por JS -->
+        </div>
     </section>
 
-    <!-- Pantalla Juego 2 -->
-    <section class="screen" id="game2Screen">
+    <!-- Pantalla Juego 2: Identificar formas de energía (Inglés) -->
+    <section class="screen notranslate" id="game2Screen" lang="en" translate="no">
         <header>
-            <h1>Identifica los cambios</h1>
-            <div class="subtitle">Nivel 2/2</div>
+            <h1>Identify the forms of energy</h1>
+            <div class="subtitle">Use the <span class="highlight-keyword">dropdown list</span> to select the correct form.</div>
         </header>
         <div class="game-info">
             <div class="timer" id="timerGame2">00:00.0</div>
             <div class="progress-bar"><div class="progress-fill" id="progressFillGame2"></div></div>
-            <div class="timer" style="font-size:0.9rem; visibility:hidden;">Placeholder</div>
+            <div class="level-indicator">Nivel 2/3</div>
         </div>
 
-        <div class="game2-container english-section" lang="en" translate="no">
-            <h2 style="text-align:center; font-size:1.2rem; color:var(--blue-dark);">Classify these materials: <span class="highlight-en">Natural</span> (animal, plant, mineral) or <span class="highlight-en">Artificial</span></h2>
-            
-            <div class="image-display">
-                <img src="https://manuelvs8.github.io/Origen-de-los-materiales/" alt="Material" id="game2Img" class="notranslate">
-                
-                <div class="word-display-area">
-                    <div class="material-word notranslate" id="materialWord"></div>
-                    <button class="play-word-btn" id="playWordBtn" title="Listen">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z"></path>
-                        </svg>
-                    </button>
-                </div>
+        <div class="game-container-generic">
+            <div class="image-display" id="game2Display">
+                <!-- Imagen JS -->
             </div>
 
-            <div class="selectors-container">
-                <div class="custom-select-wrapper">
-                    <div class="custom-select" id="selectNatural">
-                        <div class="custom-select__trigger"><span>Natural materials</span></div>
-                        <div class="custom-options">
-                            <span class="custom-option" data-value="Animal">Animal</span>
-                            <span class="custom-option" data-value="Plant">Plant</span>
-                            <span class="custom-option" data-value="Mineral">Mineral</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="custom-select-wrapper">
-                    <div class="custom-select" id="selectArtificial">
-                        <div class="custom-select__trigger"><span>Artificial materials</span></div>
-                        <div class="custom-options" style="display:none;">
-                        </div>
+            <div class="custom-select-wrapper drop-up">
+                <div class="custom-select" id="customSelectGame2">
+                    <div class="custom-select__trigger"><span>Forms of energy</span></div>
+                    <div class="custom-options">
+                        <span class="custom-option" data-value="Kinetic energy">Kinetic energy</span>
+                        <span class="custom-option" data-value="Thermal energy">Thermal energy</span>
+                        <span class="custom-option" data-value="Light energy">Light energy</span>
+                        <span class="custom-option" data-value="Chemical energy">Chemical energy</span>
+                        <span class="custom-option" data-value="Electrical energy">Electrical energy</span>
+                        <span class="custom-option" data-value="Nuclear energy">Nuclear energy</span>
                     </div>
                 </div>
             </div>
 
             <div class="action-area">
-                <button class="btn btn-primary" id="checkBtn">Comprobar</button>
-                <button class="btn btn-primary" id="continueBtn" style="display:none;">Continuar</button>
+                <button class="btn btn-primary" id="checkBtnGame2">Comprobar</button>
+                <button class="btn btn-primary" id="continueBtnGame2" style="display:none;">Continuar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pantalla Juego 3: Identificar formas de energía - Grid (Inglés) -->
+    <section class="screen notranslate" id="game3Screen" lang="en" translate="no">
+        <header>
+            <h1>Identify the forms of energy</h1>
+        </header>
+        <div class="game-info">
+            <div class="timer" id="timerGame3">00:00.0</div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFillGame3"></div></div>
+            <div class="level-indicator">Nivel 3/3</div>
+        </div>
+        <div class="game3-wrapper">
+            <div class="game3-display">
+                <div class="game3-text" id="game3Text"></div>
+                <button class="game3-play-btn" id="game3PlayBtn" title="Listen">
+                    <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </button>
+            </div>
+            <div class="game3-grid" id="game3Grid">
+                <!-- Celdas generadas por JS -->
             </div>
         </div>
     </section>
@@ -630,7 +662,7 @@
     <!-- Pantalla Final -->
     <section class="screen" id="finalScreen">
         <header>
-            <h1 class="final-title">Origen de los materiales</h1>
+            <h1 class="final-title">Formas de energía</h1>
         </header>
         <div class="results">
             <div id="trophyBox">🏆</div>
@@ -641,7 +673,7 @@
             <div id="finalMsg" class="subtitle"></div>
             <button class="btn btn-primary" id="backToMenuBtn" style="background:var(--orange);">Volver al menú</button>
             <span class="credit">Creado por Manuel J. Ventura</span>
-            <img class="school-logo" src="./Origen de los materiales_files/Siurot.png" alt="School logo">
+            <img class="school-logo" src="https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Siurot.png" alt="School logo" />
         </div>
     </section>
 </div>
@@ -662,20 +694,20 @@
 
 <script>
     /* --- 1. CONFIGURACIÓN DE VARIABLES GLOBALES (CRÍTICO) --- */
-    const SHEET_NAME = "Origen";
+    const SHEET_NAME = "Formas";
     const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXaTeZczyTg43AjfomeGov1WvmndAxl30YQkuNCk_2kDbQegsO4amWubjl5DBa0QNDgw/exec";
-    const MIN_INTERACTIONS = 20; // 7 parejas + 13 imágenes
     
     let soundEnabled = true;
-    let audioUnlocked = false;
     let isMuted = false;
-    let audioContext = null;
+    let audioCtxRef = null;
 
     let startTime = 0;
     let timerInterval = null;
     let elapsed = 0;
     let finalTimeVal = 0;
     let finalScoreVal = 0;
+
+    const MIN_ATTEMPTS = 18;
     let totalAttempts = 0;
 
     /* --- AUDIOS --- */
@@ -695,124 +727,133 @@
         audioObjects[key] = a; 
     });
 
-    /* --- FUNCIONES DE AUDIO --- */
-    function unlockAudioContext() {
-        if (audioUnlocked) return;
-        try {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioContext.state === 'suspended') {
-                audioContext.resume();
-            }
-            // Create silent buffer to unlock audio
-            const buffer = audioContext.createBuffer(1, 1, 22050);
-            const source = audioContext.createBufferSource();
-            source.buffer = buffer;
-            source.connect(audioContext.destination);
-            source.start(0);
-            audioUnlocked = true;
-            isMuted = false;
-        } catch(e) { 
-            audioUnlocked = true; 
-        }
-    }
-
-    function forceInitTTS() {
-        return new Promise((resolve) => {
-            let voices = window.speechSynthesis.getVoices();
-            if (voices.length > 0) {
-                resolve();
-                return;
-            }
-            // Force initialization with empty utterance
-            const utterance = new SpeechSynthesisUtterance('');
-            utterance.volume = 0;
-            window.speechSynthesis.speak(utterance);
-            
-            let attempts = 0;
-            const checkVoices = setInterval(() => {
-                voices = window.speechSynthesis.getVoices();
-                attempts++;
-                if (voices.length > 0 || attempts > 20) {
-                    clearInterval(checkVoices);
-                    resolve();
-                }
-            }, 100);
-        });
-    }
-
-    function getBestVoice() {
-        const voices = window.speechSynthesis.getVoices();
-        let bestVoice = null;
-        
-        // Priority 1: Google UK English
-        for (let voice of voices) {
-            if (voice.name === 'Google UK English') {
-                bestVoice = voice;
-                break;
-            }
-        }
-        
-        // Priority 2: Microsoft or Natural en-GB
-        if (!bestVoice) {
-            for (let voice of voices) {
-                if (voice.lang === 'en-GB' && (voice.name.includes('Microsoft') || voice.name.includes('Natural'))) {
-                    bestVoice = voice;
-                    break;
-                }
-            }
-        }
-        
-        // Priority 3: Any en-GB
-        if (!bestVoice) {
-            for (let voice of voices) {
-                if (voice.lang === 'en-GB') {
-                    bestVoice = voice;
-                    break;
-                }
-            }
-        }
-        
-        return bestVoice;
-    }
-
-    function speakText(text) {
-        window.speechSynthesis.cancel();
-        
-        const utterance = new SpeechSynthesisUtterance(text);
-        const voice = getBestVoice();
-        if (voice) {
-            utterance.voice = voice;
-        }
-        utterance.lang = 'en-GB';
-        utterance.rate = 0.85;
-        utterance.pitch = 1;
-        
-        window.speechSynthesis.speak(utterance);
-    }
-
-    function playSound(type) {
+    /* --- FUNCIONES DE SONIDO --- */
+    function reproducirSonidoCorrecto() {
         if (!soundEnabled || isMuted) return;
-        if (!audioUnlocked) unlockAudioContext();
-        const a = audioObjects[type];
+        const a = audioObjects['correct'];
+        if(!a) return;
+        try { a.currentTime = 0; a.play(); } catch(e){}
+    }
+    function reproducirSonidoError() {
+        if (!soundEnabled || isMuted) return;
+        const a = audioObjects['error'];
+        if(!a) return;
+        try { a.currentTime = 0; a.play(); } catch(e){}
+    }
+    function reproducirSonidoVictoria() {
+        if (!soundEnabled || isMuted) return;
+        const a = audioObjects['victory'];
+        if(!a) return;
+        try { a.currentTime = 0; a.play(); } catch(e){}
+    }
+    function reproducirSonidoCompletado() {
+        if (!soundEnabled || isMuted) return;
+        const a = audioObjects['completed'];
+        if(!a) return;
+        try { a.currentTime = 0; a.play(); } catch(e){}
+    }
+    function reproducirSonidoTap() {
+        if (!soundEnabled || isMuted) return;
+        const a = audioObjects['tap'];
         if(!a) return;
         try { a.currentTime = 0; a.play(); } catch(e){}
     }
 
-    function toggleSound() {
-        soundEnabled = !soundEnabled;
-        isMuted = !soundEnabled;
-        updateMuteIcon();
-        if(soundEnabled) playSound('tap');
+    /* --- DESBLOQUEO DE AUDIO (AudioContext) --- */
+    function unlockAudioContext() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            if (ctx.state === 'suspended') {
+                ctx.resume();
+            }
+            const buffer = ctx.createBuffer(1, 1, 22050);
+            const source = ctx.createBufferSource();
+            source.buffer = buffer;
+            source.connect(ctx.destination);
+            source.start();
+            audioCtxRef = ctx;
+        } catch(e) {}
     }
-    
-    function updateMuteIcon() {
-        const iconSpeaker = document.getElementById('iconSpeaker');
-        if (!soundEnabled) {
-            iconSpeaker.innerHTML = '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>';
+
+    /* --- TTS: FORZAR CARGA DE VOCES --- */
+    let ttsForced = false;
+    function forceInitTTS() {
+        if (ttsForced) return;
+        if (window.speechSynthesis.getVoices().length > 0) { ttsForced = true; return; }
+        const u = new SpeechSynthesisUtterance('');
+        u.volume = 0;
+        window.speechSynthesis.speak(u);
+        ttsForced = true;
+    }
+
+    /* --- TTS: SELECCIÓN DE VOZ --- */
+    function getBestVoice() {
+        const voices = window.speechSynthesis.getVoices();
+        let v = voices.find(voice => voice.name.includes('Google UK English'));
+        if (v) return v;
+        v = voices.find(voice => voice.lang === 'en-GB' && (voice.name.includes('Microsoft') || voice.name.includes('Natural')));
+        if (v) return v;
+        v = voices.find(voice => voice.lang === 'en-GB');
+        if (v) return v;
+        return null;
+    }
+
+    /* --- TTS: HABLAR --- */
+    function speakText(text) {
+        if (!window.speechSynthesis) return;
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        const voice = getBestVoice();
+        if (voice) u.voice = voice;
+        u.lang = 'en-GB';
+        u.rate = 0.85;
+        window.speechSynthesis.speak(u);
+    }
+
+    /* --- SVG MUTE BUTTON --- */
+    const svgSoundOn = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
+    const svgSoundOff = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
+
+    function toggleSound() {
+        if (isMuted) {
+            isMuted = false;
+            soundEnabled = true;
+            document.getElementById('muteBtn').innerHTML = svgSoundOn;
+            reproducirSonidoTap();
         } else {
-            iconSpeaker.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+            isMuted = true;
+            soundEnabled = false;
+            document.getElementById('muteBtn').innerHTML = svgSoundOff;
         }
     }
+
+    /* --- DATOS DEL JUEGO --- */
+    const game1Data = [
+        { id: 1, term: 'Mecánica', def: 'Cuerpos en movimiento' },
+        { id: 2, term: 'Térmica', def: 'Transmite calor' },
+        { id: 3, term: 'Luminosa', def: 'Emite luz' },
+        { id: 4, term: 'Química', def: 'Almacenada en alimentos, baterías y combustibles' },
+        { id: 5, term: 'Eléctrica', def: 'Contiene electricidad' },
+        { id: 6, term: 'Nuclear', def: 'Energía en el interior de los átomos' }
+    ];
+
+    const game2Data = [
+        { type: 'Kinetic energy', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materia_Eergia/Formas_Energia/Kinetic.png' },
+        { type: 'Thermal energy', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materia_Eergia/Formas_Energia/Thermal.png' },
+        { type: 'Light energy', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materia_Eergia/Formas_Energia/Light.png' },
+        { type: 'Chemical energy', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materia_Eergia/Formas_Energia/Chemical.png' },
+        { type: 'Electrical energy', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materia_Eergia/Formas_Energia/Electrical.png' },
+        { type: 'Nuclear energy', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materia_Eergia/Formas_Energia/Nuclear.png' }
+    ];
+
+    const game3Data = [
+        { type: 'Kinetic energy', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materia_Eergia/Formas_Energia/Kinetic.png' },
+        { type: 'Thermal energy', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materia_Eergia/Formas_Energia/Thermal.png' },
+        { type: 'Light energy', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materia_Eergia/Formas_Energia/Light.png' },
+        { type: 'Chemical energy', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materia_Eergia/Formas_Energia/Chemical.png' },
+        { type: 'Electrical energy', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materia_Eergia/Formas_Energia/Electrical.png' },
+        { type: 'Nuclear energy', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materia_Eergia/Formas_Energia/Nuclear.png' }
+    ];
 
     /* --- LÓGICA GENERAL --- */
     function showScreen(id) {
@@ -828,8 +869,12 @@
             const now = Date.now();
             const delta = (now - startTime) / 1000;
             elapsed = delta;
-            updateTimerDisplay('timerGame1', elapsed);
-            updateTimerDisplay('timerGame2', elapsed);
+            
+            const timeStr = formatTime(delta);
+            
+            if(document.getElementById('timerGame1')) document.getElementById('timerGame1').textContent = timeStr;
+            if(document.getElementById('timerGame2')) document.getElementById('timerGame2').textContent = timeStr;
+            if(document.getElementById('timerGame3')) document.getElementById('timerGame3').textContent = timeStr;
         }, 100);
     }
 
@@ -839,327 +884,12 @@
             timerInterval = null;
         }
     }
-    
-    function updateTimerDisplay(id, time) {
-        const el = document.getElementById(id);
-        if(el) el.textContent = formatTime(time);
-    }
 
     function formatTime(sec) {
         const m = Math.floor(sec / 60).toString().padStart(2, '0');
         const s = Math.floor(sec % 60).toString().padStart(2, '0');
         const ms = Math.round((sec % 1) * 10);
         return `${m}:${s}.${ms}`;
-    }
-
-    /* --- FLUJO PRINCIPAL --- */
-    document.getElementById('startBtn').onclick = async () => { 
-        unlockAudioContext();
-        await forceInitTTS();
-        playSound('tap'); 
-        showScreen('summaryScreen'); 
-    };
-    
-    document.getElementById('playBtn').onclick = () => { 
-        playSound('tap'); 
-        startGlobalTimer();
-        totalAttempts = 0;
-        initGame1();
-    };
-
-    /* --- JUEGO 1: EMPAREJAR --- */
-    let selectedCards = [];
-    let matchesFound = 0;
-    let attemptsGame1 = 0;
-    const totalPairs1 = 7;
-
-    const game1Data = [
-        { id: 1, term: 'Materiales de origen natural', def: 'Los encontramos en la naturaleza', pairId: 'nat' },
-        { id: 2, term: 'Materiales de origen artificial', def: 'Son fabricados por las personas', pairId: 'art' },
-        { id: 3, term: 'Natural - animal', def: 'Lana, cuero, seda…', pairId: 'animal' },
-        { id: 4, term: 'Natural - vegetal', def: 'Algodón, madera, corcho…', pairId: 'vegetal' },
-        { id: 5, term: 'Natural - mineral', def: 'Hierro, granito, cobre…', pairId: 'mineral' },
-        { id: 6, term: 'Plástico', def: 'Material artificial que obtenemos del petróleo', pairId: 'plastico' },
-        { id: 7, term: 'Bronce', def: 'Material artificial procedente de fundir cobre y estaño', pairId: 'bronce' }
-    ];
-
-    function initGame1() {
-        showScreen('game1Screen');
-        attemptsGame1 = 0;
-        matchesFound = 0;
-        selectedCards = [];
-        document.getElementById('attemptsGame1').textContent = '0';
-        updateProgress('progressFillGame1', 0);
-        
-        const container = document.getElementById('cardsContainerGame1');
-        container.innerHTML = '';
-        
-        let cards = [];
-        game1Data.forEach(p => { cards.push({text: p.term, pairId: p.pairId, type: 'term'}); cards.push({text: p.def, pairId: p.pairId, type: 'def'}); });
-        cards.sort(() => Math.random() - 0.5);
-
-        cards.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'memory-card';
-            card.textContent = item.text;
-            card.dataset.pairId = item.pairId;
-            card.dataset.text = item.text;
-            card.onclick = () => selectCard(card);
-            container.appendChild(card);
-        });
-    }
-
-    function selectCard(card) {
-        if (card.classList.contains('matched') || selectedCards.length >= 2 || selectedCards.includes(card)) return;
-        
-        if (selectedCards.length === 0) playSound('tap');
-        
-        card.classList.add('selected');
-        selectedCards.push(card);
-
-        if (selectedCards.length === 2) {
-            attemptsGame1++;
-            totalAttempts++;
-            document.getElementById('attemptsGame1').textContent = attemptsGame1;
-
-            const c1 = selectedCards[0];
-            const c2 = selectedCards[1];
-            
-            const id1 = c1.dataset.pairId;
-            const id2 = c2.dataset.pairId;
-
-            if (id1 === id2) {
-                playSound('correct');
-                c1.classList.remove('selected'); c2.classList.remove('selected');
-                c1.classList.add('matched'); c2.classList.add('matched');
-                matchesFound++;
-                updateProgress('progressFillGame1', (matchesFound / totalPairs1) * 100);
-                selectedCards = [];
-                if (matchesFound === totalPairs1) {
-                    setTimeout(() => { initGame2(); }, 800);
-                }
-            } else {
-                playSound('error');
-                c1.classList.add('flash-error'); c2.classList.add('flash-error');
-                
-                setTimeout(() => {
-                    c1.classList.remove('selected', 'flash-error');
-                    c2.classList.remove('selected', 'flash-error');
-                    selectedCards = [];
-                }, 300);
-            }
-        }
-    }
-
-    /* --- JUEGO 2: IDENTIFICAR --- */
-    const game2Data = [
-        // Natural - Animal
-        { type: 'Animal', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Lana.png', word: 'Wool' },
-        { type: 'Animal', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Cuero.png', word: 'Leather' },
-        { type: 'Animal', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Seda.png', word: 'Silk' },
-        // Natural - Plant
-        { type: 'Plant', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Algodon.png', word: 'Cotton' },
-        { type: 'Plant', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Madera.png', word: 'Wood' },
-        { type: 'Plant', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Corcho.png', word: 'Cork' },
-        // Natural - Mineral
-        { type: 'Mineral', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Hierro.png', word: 'Iron' },
-        { type: 'Mineral', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Granito.png', word: 'Granite' },
-        { type: 'Mineral', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Oro.png', word: 'Gold' },
-        // Artificial
-        { type: 'Artificial', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Plastico.png', word: 'Plastic' },
-        { type: 'Artificial', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Papel.png', word: 'Paper' },
-        { type: 'Artificial', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/VIdrio.png', word: 'Glass' },
-        { type: 'Artificial', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Bronce.png', word: 'Bronze' }
-    ];
-    
-    let game2Items = [];
-    let currentIndex2 = 0;
-    let currentSelection = null;
-    const totalItems2 = 13;
-    
-    const selectNatural = document.getElementById('selectNatural');
-    const selectArtificial = document.getElementById('selectArtificial');
-    const triggerNatural = selectNatural.querySelector('.custom-select__trigger');
-    const triggerArtificial = selectArtificial.querySelector('.custom-select__trigger');
-    
-    const game2Img = document.getElementById('game2Img');
-    const materialWord = document.getElementById('materialWord');
-    const playWordBtn = document.getElementById('playWordBtn');
-    const checkBtn = document.getElementById('checkBtn');
-    const continueBtn = document.getElementById('continueBtn');
-
-    // Play word button
-    playWordBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const word = materialWord.textContent;
-        if (word) {
-            speakText(word);
-        }
-    });
-
-    // Dropdown Logic for Natural
-    triggerNatural.addEventListener('click', () => {
-        selectNatural.classList.toggle('open');
-        playSound('tap');
-    });
-    
-    // Logic for Artificial (no dropdown, just selection)
-    triggerArtificial.addEventListener('click', () => {
-        window.speechSynthesis.cancel();
-        playSound('tap');
-        
-        // Reset validation colors
-        triggerNatural.classList.remove('correct', 'wrong');
-        triggerArtificial.classList.remove('correct', 'wrong');
-        
-        // Reset highlights
-        triggerNatural.classList.remove('selected-highlight');
-        triggerArtificial.classList.add('selected-highlight');
-        
-        currentSelection = 'Artificial';
-        selectArtificial.classList.add('selected');
-        selectNatural.classList.remove('selected');
-        triggerNatural.innerHTML = '<span>Natural materials</span>';
-    });
-
-    window.addEventListener('click', function(e) {
-        if (!selectNatural.contains(e.target)) selectNatural.classList.remove('open');
-    });
-
-    // Options Logic for Natural
-    selectNatural.querySelectorAll('.custom-option').forEach(option => {
-        option.addEventListener('click', function(e) {
-            e.stopPropagation();
-            window.speechSynthesis.cancel();
-            playSound('tap');
-            
-            selectNatural.classList.remove('open');
-            
-            // Reset highlights
-            triggerNatural.classList.add('selected-highlight');
-            triggerArtificial.classList.remove('selected-highlight');
-            
-            triggerNatural.innerHTML = this.textContent;
-            selectNatural.classList.add('selected');
-            selectArtificial.classList.remove('selected');
-            triggerArtificial.innerHTML = '<span>Artificial materials</span>';
-            
-            // Reset validation colors
-            triggerNatural.classList.remove('correct', 'wrong');
-            triggerArtificial.classList.remove('correct', 'wrong');
-            
-            currentSelection = this.getAttribute('data-value');
-        });
-    });
-
-    checkBtn.addEventListener('click', checkAnswerGame2);
-    continueBtn.addEventListener('click', nextLevelGame2);
-
-    function initGame2() {
-        showScreen('game2Screen');
-        currentIndex2 = 0;
-        updateProgress('progressFillGame2', 0);
-        game2Items = shuffle([...game2Data]);
-        loadQuestionGame2();
-    }
-
-    function loadQuestionGame2() {
-        const item = game2Items[currentIndex2];
-        game2Img.src = item.img;
-        materialWord.textContent = item.word;
-        
-        // Reset Selects
-        triggerNatural.innerHTML = '<span>Natural materials</span>';
-        triggerArtificial.innerHTML = '<span>Artificial materials</span>';
-        selectNatural.classList.remove('selected');
-        selectArtificial.classList.remove('selected');
-        triggerNatural.classList.remove('correct', 'wrong', 'selected-highlight');
-        triggerArtificial.classList.remove('correct', 'wrong', 'selected-highlight');
-        
-        currentSelection = null;
-        checkBtn.style.display = 'inline-flex';
-        continueBtn.style.display = 'none';
-        
-        // Speak the word automatically
-        setTimeout(() => {
-            speakText(item.word);
-        }, 300);
-    }
-
-    function checkAnswerGame2() {
-        if (!currentSelection) {
-            return;
-        }
-
-        window.speechSynthesis.cancel();
-        
-        const correctType = game2Items[currentIndex2].type;
-        totalAttempts++;
-
-        if (currentSelection === correctType) {
-            playSound('correct');
-            
-            const correctTrigger = ['Animal', 'Plant', 'Mineral'].includes(currentSelection) 
-                ? triggerNatural : triggerArtificial;
-            correctTrigger.classList.add('correct');
-            
-            setTimeout(() => { nextLevelGame2(); }, 250);
-            
-        } else {
-            playSound('error');
-            
-            const wrongTrigger = ['Animal', 'Plant', 'Mineral'].includes(currentSelection) 
-                ? triggerNatural : triggerArtificial;
-            wrongTrigger.classList.add('wrong');
-            
-            checkBtn.style.display = 'none';
-            continueBtn.style.display = 'inline-flex';
-        }
-    }
-
-    function nextLevelGame2() {
-        currentIndex2++;
-        updateProgress('progressFillGame2', (currentIndex2 / totalItems2) * 100);
-
-        if (currentIndex2 < totalItems2) {
-            loadQuestionGame2();
-        } else {
-            finishGame();
-        }
-    }
-
-    /* --- FINALIZAR --- */
-    function calcularPuntuacionFinal() {
-        let score = 100 - ((totalAttempts - MIN_INTERACTIONS) * (100 / MIN_INTERACTIONS));
-        score = Math.max(0, score);
-        return Math.round(score);
-    }
-
-    function finishGame() {
-        window.speechSynthesis.cancel();
-        stopTimer();
-        finalTimeVal = elapsed;
-        finalScoreVal = calcularPuntuacionFinal();
-
-        document.getElementById('finalScore').textContent = finalScoreVal;
-        document.getElementById('finalTime').textContent = formatTime(finalTimeVal);
-
-        const trophyBox = document.getElementById('trophyBox');
-        const msg = document.getElementById('finalMsg');
-        
-        if (finalScoreVal === 100) {
-            trophyBox.style.display = 'block';
-            msg.textContent = '¡Enhorabuena, puntuación máxima!';
-            playSound('victory');
-            createConfetti();
-        } else {
-            trophyBox.style.display = 'none';
-            msg.textContent = '¡Buen trabajo! Sigue practicando';
-            playSound('completed');
-        }
-
-        showScreen('finalScreen');
-        showSubmitModal(finalTimeVal, finalScoreVal);
     }
 
     function updateProgress(id, pct) {
@@ -1174,6 +904,345 @@
             [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
         }
         return array;
+    }
+
+    function calcularPuntuacionFinal() {
+        const score = 100 - ((totalAttempts - MIN_ATTEMPTS) * (100 / MIN_ATTEMPTS));
+        return Math.max(0, Math.round(score));
+    }
+
+    /* --- FLUJO PRINCIPAL --- */
+    document.getElementById('startBtn').onclick = () => { 
+        reproducirSonidoTap(); 
+        unlockAudioContext();
+        forceInitTTS();
+        showScreen('summaryScreen'); 
+    };
+    
+    document.getElementById('playBtn').onclick = () => { 
+        reproducirSonidoTap(); 
+        totalAttempts = 0;
+        startGlobalTimer();
+        initGame1();
+    };
+
+    /* --- JUEGO 1: EMPAREJAR CON DEFINICIONES --- */
+    let selectedCard1 = null;
+    let matchesFound1 = 0;
+    const totalMatches1 = 6;
+
+    function initGame1() {
+        showScreen('game1Screen');
+        matchesFound1 = 0;
+        selectedCard1 = null;
+        updateProgress('progressFillGame1', 0);
+        
+        const container = document.getElementById('matchContainer1');
+        container.innerHTML = '';
+        
+        const col1 = document.createElement('div');
+        col1.className = 'match-column';
+        const col2 = document.createElement('div');
+        col2.className = 'match-column';
+
+        let terms = game1Data.map(d => ({ type: 'term', id: d.id, content: d.term }));
+        let defs = game1Data.map(d => ({ type: 'def', id: d.id, content: d.def }));
+        
+        terms = shuffle(terms);
+        defs = shuffle(defs);
+
+        terms.forEach(t => {
+            const card = document.createElement('div');
+            card.className = 'match-card';
+            card.dataset.id = t.id;
+            card.dataset.type = 'term';
+            card.textContent = t.content;
+            card.onclick = () => selectMatchCard1(card);
+            col1.appendChild(card);
+        });
+
+        defs.forEach(d => {
+            const card = document.createElement('div');
+            card.className = 'match-card def-card';
+            card.dataset.id = d.id;
+            card.dataset.type = 'def';
+            card.textContent = d.content;
+            card.onclick = () => selectMatchCard1(card);
+            col2.appendChild(card);
+        });
+
+        container.appendChild(col1);
+        container.appendChild(col2);
+    }
+
+    function selectMatchCard1(card) {
+        if (card.classList.contains('matched')) return;
+
+        if (!selectedCard1) {
+            reproducirSonidoTap();
+            card.classList.add('selected');
+            selectedCard1 = card;
+        } else {
+            if (selectedCard1 === card) {
+                card.classList.remove('selected');
+                selectedCard1 = null;
+                return;
+            }
+
+            if (selectedCard1.dataset.type === card.dataset.type) {
+                reproducirSonidoTap();
+                selectedCard1.classList.remove('selected');
+                card.classList.add('selected');
+                selectedCard1 = card;
+                return;
+            }
+
+            totalAttempts++;
+            
+            const id1 = selectedCard1.dataset.id;
+            const id2 = card.dataset.id;
+
+            if (id1 === id2) {
+                reproducirSonidoCorrecto();
+                matchesFound1++;
+                
+                selectedCard1.classList.remove('selected');
+                selectedCard1.classList.add('matched');
+                card.classList.add('matched');
+                
+                selectedCard1 = null;
+                
+                updateProgress('progressFillGame1', (matchesFound1 / totalMatches1) * 100);
+
+                if (matchesFound1 === totalMatches1) {
+                    setTimeout(initGame2, 800);
+                }
+            } else {
+                reproducirSonidoError();
+                
+                selectedCard1.classList.add('flash-error');
+                card.classList.add('flash-error');
+                
+                const s1 = selectedCard1;
+                const s2 = card;
+                
+                setTimeout(() => {
+                    s1.classList.remove('selected', 'flash-error');
+                    s2.classList.remove('flash-error');
+                }, 300);
+                
+                selectedCard1 = null;
+            }
+        }
+    }
+
+    /* --- JUEGO 2: IDENTIFICAR FORMAS DE ENERGÍA (INGLÉS) --- */
+    let game2Items = [];
+    let currentIndex2 = 0;
+    let currentSelection2 = null;
+    const totalItems2 = 6;
+
+    const select2 = document.getElementById('customSelectGame2');
+    const trigger2 = select2.querySelector('.custom-select__trigger');
+    const options2 = select2.querySelectorAll('.custom-option');
+
+    trigger2.addEventListener('click', () => {
+        select2.classList.toggle('open');
+        reproducirSonidoTap();
+    });
+    
+    window.addEventListener('click', (e) => {
+        if (!select2.contains(e.target)) select2.classList.remove('open');
+    });
+
+    options2.forEach(option => {
+        option.addEventListener('click', function() {
+            if(!select2.classList.contains('open')) return;
+            select2.classList.remove('open');
+            trigger2.querySelector('span').textContent = this.textContent;
+            select2.classList.add('selected'); 
+            currentSelection2 = this.getAttribute('data-value');
+            trigger2.classList.remove('correct', 'wrong');
+            reproducirSonidoTap();
+        });
+    });
+
+    document.getElementById('checkBtnGame2').onclick = checkAnswerGame2;
+    document.getElementById('continueBtnGame2').onclick = nextLevelGame2;
+
+    function initGame2() {
+        showScreen('game2Screen');
+        currentIndex2 = 0;
+        currentSelection2 = null;
+        updateProgress('progressFillGame2', 0);
+        
+        game2Items = shuffle([...game2Data]);
+        loadQuestionGame2();
+    }
+
+    function loadQuestionGame2() {
+        const item = game2Items[currentIndex2];
+        const display = document.getElementById('game2Display');
+        display.innerHTML = `<img src="${item.img}" alt="Form of energy">`;
+        
+        trigger2.querySelector('span').textContent = 'Forms of energy';
+        trigger2.classList.remove('selected', 'correct', 'wrong');
+        currentSelection2 = null;
+        
+        document.getElementById('checkBtnGame2').style.display = 'inline-flex';
+        document.getElementById('continueBtnGame2').style.display = 'none';
+    }
+
+    function checkAnswerGame2() {
+        if (!currentSelection2) {
+            alert("Please select an option.");
+            return;
+        }
+        totalAttempts++;
+        const correctType = game2Items[currentIndex2].type;
+
+        if (currentSelection2 === correctType) {
+            reproducirSonidoCorrecto();
+            trigger2.classList.remove('wrong');
+            trigger2.classList.add('correct');
+            setTimeout(nextLevelGame2, 200);
+        } else {
+            reproducirSonidoError();
+            trigger2.classList.remove('correct');
+            trigger2.classList.add('wrong');
+            
+            document.getElementById('checkBtnGame2').style.display = 'none';
+            document.getElementById('continueBtnGame2').style.display = 'inline-flex';
+        }
+    }
+
+    function nextLevelGame2() {
+        currentIndex2++;
+        updateProgress('progressFillGame2', (currentIndex2 / totalItems2) * 100);
+
+        if (currentIndex2 < totalItems2) {
+            loadQuestionGame2();
+        } else {
+            initGame3();
+        }
+    }
+
+    /* --- JUEGO 3: IDENTIFICAR FORMAS DE ENERGÍA - GRID (INGLÉS) --- */
+    let game3GridItems = [];
+    let game3QuestionItems = [];
+    let game3CurrentIndex = 0;
+    let game3CorrectCount = 0;
+    const totalItems3 = 6;
+
+    document.getElementById('game3PlayBtn').onclick = () => {
+        reproducirSonidoTap();
+        if (game3QuestionItems[game3CurrentIndex]) {
+            speakText(game3QuestionItems[game3CurrentIndex].type);
+        }
+    };
+
+    function initGame3() {
+        showScreen('game3Screen');
+        game3CurrentIndex = 0;
+        game3CorrectCount = 0;
+        updateProgress('progressFillGame3', 0);
+        
+        game3GridItems = shuffle([...game3Data]);
+        game3QuestionItems = shuffle([...game3Data]);
+        
+        const grid = document.getElementById('game3Grid');
+        grid.innerHTML = '';
+
+        game3GridItems.forEach((item, index) => {
+            const cell = document.createElement('div');
+            cell.className = 'game3-cell';
+            cell.dataset.index = index;
+            cell.dataset.type = item.type;
+            cell.innerHTML = `<img src="${item.img}" alt="${item.type}">`;
+            cell.onclick = () => handleGame3CellClick(cell);
+            grid.appendChild(cell);
+        });
+
+        loadGame3Question();
+    }
+
+    function loadGame3Question() {
+        const item = game3QuestionItems[game3CurrentIndex];
+        document.getElementById('game3Text').textContent = item.type;
+        
+        setTimeout(() => {
+            speakText(item.type);
+        }, 200);
+    }
+
+    function handleGame3CellClick(cell) {
+        window.speechSynthesis.cancel();
+        totalAttempts++;
+
+        const cellType = cell.dataset.type;
+        const correctType = game3QuestionItems[game3CurrentIndex].type;
+
+        if (cellType === correctType) {
+            reproducirSonidoCorrecto();
+            cell.classList.add('flash-correct');
+            
+            setTimeout(() => {
+                cell.classList.remove('flash-correct');
+                game3CurrentIndex++;
+                game3CorrectCount++;
+                updateProgress('progressFillGame3', (game3CurrentIndex / totalItems3) * 100);
+
+                if (game3CurrentIndex < totalItems3) {
+                    loadGame3Question();
+                } else {
+                    finishGame();
+                }
+            }, 200);
+        } else {
+            reproducirSonidoError();
+            cell.classList.add('flash-error');
+            
+            setTimeout(() => {
+                cell.classList.remove('flash-error');
+            }, 200);
+        }
+    }
+
+    /* --- FINALIZAR --- */
+    function finishGame() {
+        window.speechSynthesis.cancel();
+        stopTimer();
+        finalTimeVal = elapsed;
+        
+        finalScoreVal = calcularPuntuacionFinal();
+
+        document.getElementById('finalScore').textContent = finalScoreVal;
+        document.getElementById('finalTime').textContent = formatTime(finalTimeVal);
+
+        const trophyBox = document.getElementById('trophyBox');
+        const msg = document.getElementById('finalMsg');
+        
+        if (finalScoreVal === 100) {
+            trophyBox.style.display = 'block';
+            msg.textContent = '¡Genial! ¡Puntuación perfecta!';
+            reproducirSonidoVictoria();
+            createConfetti();
+        } else if (finalScoreVal >= 80) {
+            trophyBox.style.display = 'none';
+            msg.textContent = 'Casi lo logras. ¡Sigue practicando!';
+            reproducirSonidoCompletado();
+        } else if (finalScoreVal >= 50) {
+            trophyBox.style.display = 'none';
+            msg.textContent = 'No está mal, pero aún puedes hacerlo mejor';
+            reproducirSonidoCompletado();
+        } else {
+            trophyBox.style.display = 'none';
+            msg.textContent = 'Vaya desastre... ¿Seguro que has estudiado?';
+            reproducirSonidoCompletado();
+        }
+
+        showScreen('finalScreen');
+        showSubmitModal(finalTimeVal, finalScoreVal);
     }
 
     /* --- EFECTOS VISUALES --- */
@@ -1306,7 +1375,7 @@
         const nameInput = document.getElementById('playerName');
         const surnameInput = document.getElementById('playerSurname');
         
-        playSound('tap');
+        reproducirSonidoTap();
 
         const payload = {
             score: finalScoreVal,
@@ -1346,6 +1415,7 @@
     document.getElementById('submitScoreBtn').onclick = handleSubmitScore;
 
     document.getElementById('discardScoreBtn').onclick = () => { 
+        reproducirSonidoTap();
         document.getElementById('submitModal').style.display = 'none'; 
     };
 
@@ -1362,7 +1432,7 @@
     });
 
     document.getElementById('backToMenuBtn').onclick = () => { 
-        playSound('tap'); 
+        reproducirSonidoTap(); 
         location.reload(); 
     };
     
@@ -1372,6 +1442,5 @@
     document.addEventListener('DOMContentLoaded', () => { loadHallOfFame(); });
 
 </script>
-
-
-</body></html>
+</body>
+</html>
